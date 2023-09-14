@@ -13,7 +13,7 @@ openai.api_type = "azure"
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # GitHub API Setup
-gh_pat = "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"
+gh_pat = os.environ["GITHUB_PAT"]
 gh = Github(auth=Auth.Token(gh_pat))
 
 repo_name = "microsoft/vscode-cmake-tools"
