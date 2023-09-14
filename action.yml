@@ -1,19 +1,17 @@
 name: 'Label Suggestions'
-description: 'Suggests labels for issues using AI'
+description: 'Suggests labels for open issues using AI'
 inputs:
   token:
     description: "Access token that can access and update issues."
     required: false
     default: '${{ github.token }}'
+  api_key:
+    description: "OpenAI API access key."
+    required: true
   open-days: # id of input
     description: 'This action will perfom on issues that have been open less than `open-days`'
     required: false
     default: '7'
-  only-labels: # id of input
-    description: 'If set, this action will only perform on issues that have at least one of these labels set'
-    required: false
-  # only-assignees
-  # exempt-labels
 outputs:
   issues: # id of output
     description: 'The issue numbers that the action suggests labels for'
