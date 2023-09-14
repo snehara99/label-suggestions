@@ -22,7 +22,7 @@ async function run(){
       const labels = (await octokit.rest.issues.listLabelsForRepo({
         owner: 'microsoft',
         repo: 'vscode-cmake-tools',
-      })).data.map(i => i.name).join("','");
+      })).data.map(i => i.name).join("', '");
 
       console.log(labels);
 
@@ -32,33 +32,36 @@ async function run(){
         new AzureKeyCredential(apiKey)
       );
 
+      var chatcmpl = {}
+      var issueLabel = {}
+
       // iterate through issues to label
-      issues.forEach(async (issue) => {
+       issues.forEach(async (issue) => {
         // todo maybe play with how title and body are represented
-        const issueText = issue.title + '. ' + issue.body;
+        const issueText = issue.title + '. ' + issue.body.replace(/\n/g, ' ');
         const messages = [{'role': 'system', 'content': `You are a bot that matches one or more labels in a single line to each provided text in a single line: ${labels}`},];
         messages.push({"role": "user", "content": issueText});
-        const completion = await client.listChatCompletions(
+        const completion = client.listChatCompletions(
           "gpt-35-turbo-16k",
           messages
         );
 
         for await (const event of completion) {
-          let reply = 'Chatbot: ';
           for (const choice of event.choices) {
             const delta = choice.delta?.content;
             if (delta !== undefined) {
-              reply += delta;
+              const resp = delta.replace(/\n/g, ' ');
+              if (chatcmpl[event.id]) {
+                chatcmpl[event.id] += resp;
+              } else {
+                chatcmpl[event.id] = resp;
+              }
             }
           }
-          console.log(issue.title + " [" + issue.number + "]-\n" + reply);
+          issueLabel[issue.number] = `[ISSUE ${issue.number}][${issue.title}][${chatcmpl[event.id]}]`
+          console.log(`[ISSUE ${issue.number}][${issue.title}][${chatcmpl[event.id]}]`);
         }
-  
       });
-
-      
-
-      
   } catch (error) {
     core.setFailed(error.message);
   }
