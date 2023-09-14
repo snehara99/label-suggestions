@@ -8,17 +8,19 @@ load_dotenv()
 
 # OpenAI API Setup
 openai.api_version = "2023-08-01-preview"
-openai.api_base = "https://americasopenai.azure-api.net"
+openai.api_base = os.getenv("OPENAI_API_BASE")
 openai.api_type = "azure"
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # GitHub API Setup
-gh_pat = os.environ["GITHUB_PAT"]
+gh_pat = "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"
 gh = Github(auth=Auth.Token(gh_pat))
+
+repo_name = "microsoft/vscode-cmake-tools"
 
 def get_gh_labels():
     labels = []
-    repo = gh.get_repo("microsoft/vscode-cmake-tools")
+    repo = gh.get_repo(repo_name)
     gh_labels = repo.get_labels()
     for label in gh_labels:
         labels.append(f"'{label.name}'")
@@ -28,7 +30,16 @@ def main():
     deployment_id = "gpt-35-turbo-16k"
     # conversation=[{"role": "system", "content": "You are a helpful assistant."}]
     # conversation=[{"role": "system", "content": "You are a bot that generates short labels based on provided text."}]
-    conversation=[{"role": "system", "content": f"You are a bot that matches one or more of the following labels to the provided text in a single line: {get_gh_labels()}."}]
+    labels = get_gh_labels()
+    print(labels)
+    conversation=[
+        {
+            "role": "system", 
+            "content": f"The following is a conversation with an AI assistant for the {repo_name} public GitHub repository." +
+                       f"The assistant is focused on assigning any of these labels: {get_gh_labels()}, to issues presented."
+        }
+    ]
+    
     flag = True
 
     while(flag):
@@ -37,12 +48,13 @@ def main():
             flag = False
             print("Goodbye!")
             continue
-        conversation.append({"role": "user", "content": user_input})
+        conversation.append({"role": "user", "content": user_input + " Please liberally apply relevant labels to the provided text. Please provide results in a comma-separated list."})
         try:
             response = openai.ChatCompletion.create(
-                deployment_id=deployment_id,
+                engine=deployment_id,
                 messages=conversation,
-                temperature=0,
+                temperature=0.5,
+                top_p=0.95
                 # max_tokens=3
             )
         except openai.APIError as exception:
