@@ -1,0 +1,17 @@
+name: Suggest Labels
+on:
+  workflow_dispatch:
+    inputs:
+      readonly:
+        description: "readonly: Specify true or 1 to prevent changes from being commited to GitHub"
+        default: false
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: ./
+      with:
+        repo: 'vscode-cmake-tools'
+        owner: 'microsoft'
+        api_key: '9ddc7f61876645d8a981192e5e72309c'
+

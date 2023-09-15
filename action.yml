@@ -1,4 +1,4 @@
-name: 'Label Suggestions'
+name: 'Suggest Labels'
 description: 'Suggests labels for open issues using AI.'
 inputs:
   repo:
@@ -17,12 +17,6 @@ inputs:
   email:
     description: "The email address to send the results to."
     required: false
-
-outputs:
-  issues: # id of output
-    description: 'The issue numbers that the action suggests labels for'
-  labels: # id of output
-    description: 'The suggested labels for the issues outputted in the same order'
 runs:
   using: 'node16'
   main: 'index.js'
