@@ -18,25 +18,34 @@ gh = Github(auth=Auth.Token(gh_pat))
 
 repo_name = "microsoft/vscode-cmake-tools"
 
-def get_gh_labels():
+def get_gh_labels(repo):
     labels = []
-    repo = gh.get_repo(repo_name)
     gh_labels = repo.get_labels()
     for label in gh_labels:
         labels.append(f"'{label.name}'")
     return ", ".join(labels)
 
+def get_gh_issues(repo):
+    issues = []
+    gh_issues = repo.get_issues()
+    for issue in gh_issues:
+        print(issue)
+    print(gh_issues)
+
+
 def main():
     deployment_id = "gpt-35-turbo-16k"
     # conversation=[{"role": "system", "content": "You are a helpful assistant."}]
     # conversation=[{"role": "system", "content": "You are a bot that generates short labels based on provided text."}]
-    labels = get_gh_labels()
+    repo = gh.get_repo(repo_name)
+    labels = get_gh_labels(repo)
+    issues = get_gh_issues(repo)
     print(labels)
     conversation=[
         {
             "role": "system", 
             "content": f"The following is a conversation with an AI assistant for the {repo_name} public GitHub repository." +
-                       f"The assistant is focused on assigning any of these labels: {get_gh_labels()}, to issues presented."
+                       f"The assistant is focused on assigning any of these labels: {labels}, to issues presented."
         }
     ]
     
