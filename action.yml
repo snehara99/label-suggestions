@@ -8,7 +8,7 @@ inputs:
     description: "Access token that can access the issues on the repo."
     required: false
     default: '${{ github.token }}'
-  api_key:
+  api-key:
     description: "OpenAI API access key."
     required: true
   endpoint:

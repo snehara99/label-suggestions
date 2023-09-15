@@ -12,8 +12,8 @@ async function run() {
 
     const issues = (
       await octokit.paginate(octokit.rest.issues.listForRepo, {
-        owner: "microsoft",
-        repo: "vscode-cmake-tools",
+        owner: owner,
+        repo: repo,
         state: "open",
         per_page: 100,
       })
