@@ -10,6 +10,11 @@ async function run() {
     const token = core.getInput('token');
     const octokit = github.getOctokit(token);
 
+    // const owner = "microsoft";
+    // const repo = "vscode-cmake-tools";
+    // const token = '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';
+    // const octokit = github.getOctokit(token);
+
     const issues = (
       await octokit.paginate(octokit.rest.issues.listForRepo, {
         owner: owner,
@@ -31,6 +36,14 @@ async function run() {
     const apiKey = core.getInput('api-key');
     const endpoint = core.getInput('endpoint');
     const deploymentID = core.getInput('deployment-id');
+
+    console.log(apiKey.length);
+    console.log(endpoint);
+    console.log(deploymentID);
+
+    // const apiKey = '682b7d0a048740bc94e853531a7e17b0';
+    // const endpoint = 'https://americasopenai.azure-api.net';
+    // const deploymentID = 'gpt-35-turbo-16k';
 
     const client = new OpenAIClient(
       endpoint,
