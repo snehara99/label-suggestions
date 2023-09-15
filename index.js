@@ -26,18 +26,19 @@ async function run() {
         owner,
         repo,
       })
-    ).data
-      .map((i) => i.name)
+    ).map((i) => i.name)
       .join("', '");
 
-    let apiKey = core.getInput('api_key');
+    const apiKey = core.getInput('api-key');
+    const endpoint = core.getInput('endpoint');
+    const deploymentID = core.getInput('deployment-id');
+
     const client = new OpenAIClient(
-      "https://americasopenai.azure-api.net",
+      endpoint,
       new AzureKeyCredential(apiKey)
     );
 
-    var issueLabel = {};
-
+    var issueLabels = {};
 
     // 0 seconds worked fine, but I have it at 1 right now
     const delayMS = 1000;
@@ -60,7 +61,7 @@ async function run() {
       ];
       messages.push({ role: "user", content: userMessageText });
       const completion = await client.getChatCompletions(
-        "gpt-35-turbo-16k",
+        deploymentID,
         messages,
         {
           temperature: 0.5,
@@ -70,11 +71,11 @@ async function run() {
         }
       );
       const choice = completion.choices[0];
-      issueLabel[
+      issueLabels[
         issue.number
-      ] = `[ISSUE ${issue.number}] ${issue.title} \n\t${choice.message.content}\n`;
+      ] = `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
       console.log(
-        `[ISSUE ${issue.number}] ${issue.title} \n\t${choice.message.content}\n`
+        `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
       );
       
       await delay(delayMS);

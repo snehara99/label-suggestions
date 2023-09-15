@@ -5,11 +5,11 @@ A GitHub Action that can be used to suggest labels for issues.
 
 ### `repo`
 
-**Required** The repo with the issues that need label suggestions.
+The name of the repo with the issues that need label suggestions. Default `'${{ github.repository }}'`.
 
 ### `owner`
 
-**Required** The repo owner's user ID.
+The repo owner's username. Default `'${{ github.repository_owner }}'`.
 
 ### `token`
 
