@@ -9,7 +9,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-    - uses: ./
+    - uses: ./suggest-labels@0.0.1
       with:
         repo: 'vscode-cmake-tools'
         owner: 'microsoft'
