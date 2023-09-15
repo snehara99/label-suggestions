@@ -19,7 +19,6 @@ async function run() {
       })
     ).filter((i) => i.pull_request === undefined && i.labels.length === 0);
 
-    // TODO get all labels
     const labels = (
       await octokit.paginate(octokit.rest.issues.listLabelsForRepo, {
         owner,
@@ -83,7 +82,7 @@ async function run() {
       
       await delay(delayMS);
     });
-    core.setOutput("labels", issueLabels);
+    // core.setOutput("labels", issueLabels);
   } catch (error) {
     core.setFailed(error.message);
   }
