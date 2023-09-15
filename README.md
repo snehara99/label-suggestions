@@ -17,15 +17,15 @@ Access token that can access the issues on the repo. Default `'${{ github.token 
 
 ### `api-key`
 
-**Required** "OpenAI API access key."
+**Required** OpenAI API access key.
 
 ### `endpoint`
 
-**Required** "OpenAI endpoint for accessing the model"
+**Required** OpenAI endpoint for accessing the model.
 
 ### `deployment-id`
 
-**Required** "The deployment ID of the OpenAI model"
+**Required** The deployment ID of the OpenAI model.
 
 
 ## Outputs
@@ -38,7 +38,7 @@ The issues and their corresponding labels.
 
 ```yaml
 name: Suggest Labels
-- uses: snehara99/label-suggestions@0.0.1
+- uses: snehara99/label-suggestions@0.0.3
   with:
     repo: ${{ github.repository }}
     owner: ${{ github.repository_owner }}

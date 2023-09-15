@@ -17,9 +17,12 @@ inputs:
   api_key:
     description: "OpenAI API access key."
     required: true
-  email:
-    description: "The email address to send the results to."
-    required: false
+  endpoint:
+    description: "OpenAI endpoint for accessing the model."
+    required: true
+  deployment-id: 
+    description: "The deployment ID of the OpenAI model."
+    required: true
 runs:
   using: 'node16'
   main: 'index.js'
