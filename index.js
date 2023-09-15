@@ -77,12 +77,12 @@ async function run() {
           `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
         );
       } catch(error) {
-        console.log(error);
+        console.error(error);
       }
       
       await delay(delayMS);
     });
-    // core.setOutput("labels", issueLabels);
+    core.setOutput("labels", issueLabels);
   } catch (error) {
     core.setFailed(error.message);
   }
