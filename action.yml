@@ -1,5 +1,8 @@
 name: 'Suggest Labels'
 description: 'Suggests labels for open issues using AI.'
+branding:
+  icon: tag
+  color: purple
 inputs:
   repo:
     description: "The repo with the issues that need label suggestions."

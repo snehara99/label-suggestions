@@ -38,10 +38,10 @@ The issues and their corresponding labels.
 
 ```yaml
 name: Suggest Labels
-- uses: actions/suggest-bales@e76147da8e5c81eaf017dede5645551d4b94427b
+- uses: snehara99/label-suggestions@0.0.1
   with:
-    repo: 'vscode-cmake-tools'
-    owner: 'microsoft'
+    repo: ${{ github.repository }}
+    owner: ${{ github.repository_owner }}
     token: ${{ github.token }}
     api_key: 1111aaaa2222bbbb3333cccc4444dddd
     endpoint: 'https://americasopenai.azure-api.net'
