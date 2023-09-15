@@ -38,7 +38,7 @@ The issues and their corresponding labels.
 
 ```yaml
 name: Suggest Labels
-- uses: snehara99/label-suggestions@0.0.3
+- uses: snehara99/label-suggestions@0.0.4
   with:
     repo: ${{ github.repository }}
     owner: ${{ github.repository_owner }}

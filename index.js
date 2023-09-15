@@ -80,6 +80,7 @@ async function run() {
       
       await delay(delayMS);
     });
+    core.setOutput("labels", issueLabels);
   } catch (error) {
     core.setFailed(error.message);
   }
