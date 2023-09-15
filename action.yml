@@ -1,17 +1,23 @@
 name: 'Label Suggestions'
-description: 'Suggests labels for open issues using AI'
+description: 'Suggests labels for open issues using AI.'
 inputs:
+  repo:
+    description: "The repo with the issues that need label suggestions."
+    required: true
+  owner:
+    description: "The repo owner's user ID."
+    required: true
   token:
-    description: "Access token that can access and update issues."
+    description: "Access token that can access the issues on the repo."
     required: false
     default: '${{ github.token }}'
   api_key:
     description: "OpenAI API access key."
     required: true
-  open-days: # id of input
-    description: 'This action will perfom on issues that have been open less than `open-days`'
+  email:
+    description: "The email address to send the results to."
     required: false
-    default: '7'
+
 outputs:
   issues: # id of output
     description: 'The issue numbers that the action suggests labels for'

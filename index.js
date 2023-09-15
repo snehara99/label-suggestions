@@ -4,11 +4,12 @@ const { template } = require("lodash");
 
 const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
 
-function get_gh_labels() {}
 async function run() {
   try {
-    // let token = core.getInput('token');
-    const octokit = github.getOctokit("");
+    const repo = core.getInput('repo');
+    const owner = core.getInput('owner');
+    const token = core.getInput('token');
+    const octokit = github.getOctokit(token);
 
     const issues = (
       await octokit.paginate(octokit.rest.issues.listForRepo, {
@@ -19,11 +20,9 @@ async function run() {
       })
     ).filter((i) => i.pull_request === undefined && i.labels.length === 0);
 
-    const owner = "microsoft";
-    const repo = "vscode-cmake-tools";
     // TODO get all labels
     const labels = (
-      await octokit.rest.issues.listLabelsForRepo({
+      await octokit.paginate(octokit.rest.issues.listLabelsForRepo, {
         owner,
         repo,
       })
@@ -31,9 +30,7 @@ async function run() {
       .map((i) => i.name)
       .join("', '");
 
-    console.log(labels);
-
-    let apiKey = ""; //core.getInput('api_key');
+    let apiKey = core.getInput('api_key');
     const client = new OpenAIClient(
       "https://americasopenai.azure-api.net",
       new AzureKeyCredential(apiKey)
@@ -41,13 +38,18 @@ async function run() {
 
     var issueLabel = {};
 
-    // TODO: I think that the API library is failing because it's doing too many requests too fast, we'll need to add some delays. 
-    // This allows us to test for now.
-    const testIssues = [issues[0]];
+
+    // 0 seconds worked fine, but I have it at 1 right now
+    const delayMS = 1000;
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
 
     // iterate through issues to label
-    testIssues.forEach(async (issue) => {
+    issues.forEach(async (issue) => {
       // todo maybe play with how title and body are represented
+      if (issue.body == null) {
+        issue.body = '';
+      }
       const issueText = issue.title + ". " + issue.body.replace(/\n/g, " ");
       const userMessageText = `${issueText}. Please liberally apply relevant labels to the provided text. Please provide results in a comma-separated list.`;
       const messages = [
@@ -64,17 +66,18 @@ async function run() {
           temperature: 0.5,
           topP: 0.95,
           n: 1,
+          maxTokens: 20
         }
       );
-
-      for (const choice of completion.choices) {
-        issueLabel[
-          issue.number
-        ] = `[ISSUE ${issue.number}][${issue.title}][${choice.message.content}]`;
-        console.log(
-          `[ISSUE ${issue.number}][${issue.title}][${choice.message.content}]`
-        );
-      }
+      const choice = completion.choices[0];
+      issueLabel[
+        issue.number
+      ] = `[ISSUE ${issue.number}] ${issue.title} \n\t${choice.message.content}\n`;
+      console.log(
+        `[ISSUE ${issue.number}] ${issue.title} \n\t${choice.message.content}\n`
+      );
+      
+      await delay(delayMS);
     });
   } catch (error) {
     core.setFailed(error.message);
