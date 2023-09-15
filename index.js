@@ -37,10 +37,6 @@ async function run() {
     const endpoint = core.getInput('endpoint');
     const deploymentID = core.getInput('deployment-id');
 
-    console.log(apiKey.length);
-    console.log(endpoint);
-    console.log(deploymentID);
-
     // const apiKey = '682b7d0a048740bc94e853531a7e17b0';
     // const endpoint = 'https://americasopenai.azure-api.net';
     // const deploymentID = 'gpt-35-turbo-16k';
@@ -52,8 +48,7 @@ async function run() {
 
     var issueLabels = {};
 
-    // 0 seconds worked fine, but I have it at 1 right now
-    const delayMS = 1000;
+    const delayMS = 5000;
     const delay = ms => new Promise(res => setTimeout(res, ms));
 
 
@@ -72,6 +67,7 @@ async function run() {
         },
       ];
       messages.push({ role: "user", content: userMessageText });
+      console.log('get chat completion call');
       const completion = await client.getChatCompletions(
         deploymentID,
         messages,

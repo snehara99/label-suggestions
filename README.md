@@ -30,7 +30,7 @@ The issues and their corresponding labels.
 
 ```yaml
 name: Suggest Labels
-- uses: snehara99/label-suggestions@0.0.6
+- uses: snehara99/label-suggestions@0.0.7
   with:
     token: ${{ github.token }}
     api-key: ${{ secrets.API_KEY }}
