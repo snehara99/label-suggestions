@@ -6,8 +6,7 @@ const { OpenAIClient, AzureKeyCredential } = require("@azure/openai");
 
 async function run() {
   try {
-    const repo = core.getInput('repo');
-    const owner = core.getInput('owner');
+    const { owner, repo } = github.context.repo;
     const token = core.getInput('token');
     const octokit = github.getOctokit(token);
 

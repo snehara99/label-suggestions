@@ -1,4 +1,4 @@
-name: Suggest Labels
+name: Suggest Labels Demo
 on:
   workflow_dispatch:
     inputs:
@@ -9,12 +9,10 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-    - uses: snehara99/label-suggestions@0.0.4
+    - uses: snehara99/label-suggestions@0.0.5
       with:
-        repo: ${{ github.repository }}
-        owner: ${{ github.repository_owner }}
         token: ${{ github.token }} 
-        api_key: '9ddc7f61876645d8a981192e5e72309c'
+        api_key: ${{ secrets.API_KEY }}
         endpoint: 'https://americasopenai.azure-api.net'
         deployment-id: 'gpt-35-turbo-16k'
 

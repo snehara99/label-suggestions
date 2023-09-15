@@ -38,12 +38,10 @@ The issues and their corresponding labels.
 
 ```yaml
 name: Suggest Labels
-- uses: snehara99/label-suggestions@0.0.4
+- uses: snehara99/label-suggestions@0.0.5
   with:
-    repo: ${{ github.repository }}
-    owner: ${{ github.repository_owner }}
     token: ${{ github.token }}
-    api_key: 1111aaaa2222bbbb3333cccc4444dddd
+    api_key: ${{ secrets.API_KEY }}
     endpoint: 'https://americasopenai.azure-api.net'
     deployment-id: 'gpt-35-turbo-16k'
 ```
