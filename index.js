@@ -10,11 +10,6 @@ async function run() {
     const token = core.getInput('token');
     const octokit = github.getOctokit(token);
 
-    // const owner = "microsoft";
-    // const repo = "vscode-cmake-tools";
-    // const token = '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';
-    // const octokit = github.getOctokit(token);
-
     const issues = (
       await octokit.paginate(octokit.rest.issues.listForRepo, {
         owner: owner,
@@ -33,13 +28,10 @@ async function run() {
     ).map((i) => i.name)
       .join("', '");
 
+
     const apiKey = core.getInput('api-key');
     const endpoint = core.getInput('endpoint');
     const deploymentID = core.getInput('deployment-id');
-
-    // const apiKey = '682b7d0a048740bc94e853531a7e17b0';
-    // const endpoint = 'https://americasopenai.azure-api.net';
-    // const deploymentID = 'gpt-35-turbo-16k';
 
     const client = new OpenAIClient(
       endpoint,
@@ -48,7 +40,7 @@ async function run() {
 
     var issueLabels = {};
 
-    const delayMS = 5000;
+    const delayMS = 1000;
     const delay = ms => new Promise(res => setTimeout(res, ms));
 
 
@@ -67,24 +59,27 @@ async function run() {
         },
       ];
       messages.push({ role: "user", content: userMessageText });
-      console.log('get chat completion call');
-      const completion = await client.getChatCompletions(
-        deploymentID,
-        messages,
-        {
-          temperature: 0.5,
-          topP: 0.95,
-          n: 1,
-          maxTokens: 20
-        }
-      );
-      const choice = completion.choices[0];
-      issueLabels[
-        issue.number
-      ] = `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
-      console.log(
-        `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
-      );
+      try {
+        const completion = await client.getChatCompletions(
+          deploymentID,
+          messages,
+          {
+            temperature: 0.5,
+            topP: 0.95,
+            n: 1,
+            maxTokens: 20
+          }
+        );
+        const choice = completion.choices[0];
+        issueLabels[
+          issue.number
+        ] = `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
+        console.log(
+          `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
+        );
+      } catch(error) {
+        console.log(error);
+      }
       
       await delay(delayMS);
     });
