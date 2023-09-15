@@ -10,6 +10,11 @@ async function run() {
     const token = core.getInput('token');
     const octokit = github.getOctokit(token);
 
+    // const owner = 'microsoft';
+    // const repo = 'vscode-cmake-tools';
+    // const octokit = github.getOctokit(token);
+
+
     const issues = (
       await octokit.paginate(octokit.rest.issues.listForRepo, {
         owner: owner,
@@ -32,6 +37,9 @@ async function run() {
     const endpoint = core.getInput('endpoint');
     const deploymentID = core.getInput('deployment-id');
 
+    // const endpoint = 'https://americasopenai.azure-api.net';
+    // const deploymentID =  'gpt-35-turbo-16k';
+
     const client = new OpenAIClient(
       endpoint,
       new AzureKeyCredential(apiKey)
@@ -39,13 +47,11 @@ async function run() {
 
     var issueLabels = {};
 
-    const delayMS = 1000;
-    const delay = ms => new Promise(res => setTimeout(res, ms));
-
+    // const delayMS = 1000;
+    // const delay = ms => new Promise(res => setTimeout(res, ms));
 
     // iterate through issues to label
-    issues.forEach(async (issue) => {
-      // todo maybe play with how title and body are represented
+    for (const issue of issues) {
       if (issue.body == null) {
         issue.body = '';
       }
@@ -58,30 +64,27 @@ async function run() {
         },
       ];
       messages.push({ role: "user", content: userMessageText });
-      try {
-        const completion = await client.getChatCompletions(
-          deploymentID,
-          messages,
-          {
-            temperature: 0.5,
-            topP: 0.95,
-            n: 1,
-            maxTokens: 20
-          }
-        );
-        const choice = completion.choices[0];
-        issueLabels[
-          issue.number
-        ] = `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
-        console.log(
-          `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
-        );
-      } catch(error) {
-        console.error(error);
-      }
-      
-      await delay(delayMS);
-    });
+      console.log(deploymentID);
+      console.log(messages);
+      const completion = await client.getChatCompletions(
+        deploymentID,
+        messages,
+        {
+          temperature: 0.5,
+          topP: 0.95,
+          n: 1,
+          maxTokens: 20
+        }
+      );
+      const choice = completion.choices[0];
+      issueLabels[
+        issue.number
+      ] = `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
+      console.log(
+        `[ISSUE ${issue.number}] ${issue.title}\n${issue.html_url}\n${choice.message.content}\n`
+      );
+      // await delay(delayMS);
+    }
     core.setOutput("labels", issueLabels);
   } catch (error) {
     core.setFailed(error.message);
