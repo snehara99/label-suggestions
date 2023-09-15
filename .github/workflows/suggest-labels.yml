@@ -9,7 +9,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-    - uses: snehara99/label-suggestions@0.0.1
+    - uses: snehara99/label-suggestions@0.0.2
       with:
         repo: 'vscode-cmake-tools'
         owner: 'microsoft'
