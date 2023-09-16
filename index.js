@@ -76,6 +76,7 @@ async function run() {
           maxTokens: 20
         }
       );
+      console.log(completion);
       const choice = completion.choices[0];
       issueLabels[
         issue.number
