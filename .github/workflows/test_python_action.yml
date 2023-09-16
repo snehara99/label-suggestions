@@ -1,0 +1,18 @@
+name: Test Python Action
+on: [push]
+
+jobs:
+  generate-issue-labels:
+    runs-on: ubuntu-latest
+    name: Generate Issue Labels
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Fetch num squared
+        id: get_square
+        uses: ./python # Uses an action in the python directory
+        with:
+          token: ${{ github.token }}
+          api-key: ${{ secrets.API_KEY }}
+      - name: Print Generated Issue Label
+        run: echo "${{ steps.generate-issue-labels.outputs.issue_labels }}"
