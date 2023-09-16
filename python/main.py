@@ -30,7 +30,8 @@ def main():
     flag = True
 
     while(flag):
-        user_input = input("user: ")
+        # user_input = input("user: ")
+        user_input = "user: this issue is about a cmake bug"
         if user_input == "exit":
             flag = False
             print("Goodbye!")
@@ -58,6 +59,7 @@ def main():
         conversation.append({"role": "assistant", "content": response["choices"][0]["message"]["content"]})
         print(f"{response.choices[0].message.role}: {response.choices[0].message.content}")
         print(f"::set-output name=issue_labels::{response.choices[0].message.content}") # set output for GitHub Action
+        flag = False # short circuit for GitHub Action testing
 
 
 if __name__ == "__main__":
