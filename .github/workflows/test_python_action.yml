@@ -8,11 +8,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Fetch num squared
-        id: get_square
+      - name: Generate Issue Labels
+        id: generate_issue_labels
         uses: ./python # Uses an action in the python directory
         with:
           token: ${{ github.token }}
           api-key: ${{ secrets.API_KEY }}
-      - name: Print Generated Issue Label
+      - name: Print Generated Issue Labels
         run: echo "${{ steps.generate-issue-labels.outputs.issue_labels }}"
