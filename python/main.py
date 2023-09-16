@@ -25,6 +25,13 @@ def get_gh_labels():
     return ", ".join(labels)
 
 def main():
+    if not gh_pat or not gh_pat.strip():
+        print("Please set the 'GITHUB_PAT' environment variable.")
+        exit(1)
+    elif not openai.api_key or not openai.api_key.strip():
+        print("Please set the 'OPENAI_API_KEY' environment variable.")
+        exit(1)
+
     deployment_id = "gpt-35-turbo-16k"
     conversation=[{"role": "system", "content": f"You are a bot that matches one or more of the following labels to the provided text in a single line: {get_gh_labels()}."}]
     flag = True
