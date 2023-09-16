@@ -1,0 +1,37 @@
+name: "Suggest Labels"
+description: "Suggests labels for open issues using AI."
+branding:
+  icon: tag
+  color: purple
+inputs:
+  token:
+    description: "Access token that can access the issues on the repo."
+    required: false
+    default: "${{ github.token }}"
+  api-key:
+    description: "OpenAI API access key."
+    required: true
+outputs:
+  issue_labels:
+    description: "Generated issue labels"
+    # need to specify the extra `value` field for `composite` actions
+    value: ${{ steps.generate-issue-labels.outputs.issue_labels }}
+runs:
+  using: "composite"
+  steps:
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - name: Install Dependencies
+      run: pip install -r python/requirements.txt
+      shell: bash
+    - name: Pass Inputs to Shell
+      run: |
+        echo "GITHUB_PAT=${{ inputs.token }}" >> $GITHUB_ENV
+        echo "OPENAI_API_KEY=${{ inputs.api-key }}" >> $GITHUB_ENV
+      shell: bash
+    - name: Generate Issue Labels
+      id: generate-issue-labels
+      run: python python/main.py
+      shell: bash

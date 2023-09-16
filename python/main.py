@@ -57,6 +57,7 @@ def main():
                 raise exception
         conversation.append({"role": "assistant", "content": response["choices"][0]["message"]["content"]})
         print(f"{response.choices[0].message.role}: {response.choices[0].message.content}")
+        print(f"::set-output name=issue_labels::{response.choices[0].message.content}") # set output for GitHub Action
 
 
 if __name__ == "__main__":
