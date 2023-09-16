@@ -26,8 +26,6 @@ def get_gh_labels():
 
 def main():
     deployment_id = "gpt-35-turbo-16k"
-    # conversation=[{"role": "system", "content": "You are a helpful assistant."}]
-    # conversation=[{"role": "system", "content": "You are a bot that generates short labels based on provided text."}]
     conversation=[{"role": "system", "content": f"You are a bot that matches one or more of the following labels to the provided text in a single line: {get_gh_labels()}."}]
     flag = True
 
